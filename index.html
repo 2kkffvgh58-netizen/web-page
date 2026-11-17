@@ -114,10 +114,10 @@ footer{padding:45px 8%;background:#070707;text-align:center;border-top:1px solid
 
 <section class="section review-section" id="reviews">
  <div class="review-wrap">
-  <div class="review-intro"><div class="eyebrow">Thoughtful Service. Lasting Impressions.</div><h2 class="section-title">YOUR EXPERIENCE MATTERS</h2><p>Read approved customer-submitted experiences and share your own journey with Strategic Drive.</p></div>
+  <div class="review-intro"><div class="eyebrow">Thoughtful Service. Lasting Impressions.</div><h2 class="section-title">YOUR EXPERIENCE MATTERS</h2><p>Discover what our clients are saying and share your own Strategic Drive experience.</p></div>
   <div class="review-grid">
-   <div class="review-panel"><h3>Customer Experiences</h3><div id="reviewsList" class="review-list" aria-live="polite"><p class="review-note">Loading customer reviews…</p></div></div>
-   <div class="review-panel"><h3>Share Your Experience</h3><p class="review-note">All submissions are reviewed before appearing publicly.</p>
+   <div class="review-panel"><h3>What Our Clients Are Saying</h3><div id="reviewsList" class="review-list" aria-live="polite"><p class="review-note">Loading customer reviews…</p></div></div>
+   <div class="review-panel"><h3>Share Your Experience</h3><p class="review-note">We welcome your feedback and appreciate you taking the time to share your experience.</p>
     <form id="reviewForm" class="review-form">
      <div><label for="reviewName">Your name</label><input id="reviewName" name="name" maxlength="80" required autocomplete="name"></div>
      <div><label for="reviewRating">Your rating</label><select id="reviewRating" name="rating" required><option value="">Select a rating</option><option value="5">★★★★★ — Excellent</option><option value="4">★★★★ — Very good</option><option value="3">★★★ — Good</option><option value="2">★★ — Fair</option><option value="1">★ — Poor</option></select></div>
@@ -125,6 +125,7 @@ footer{padding:45px 8%;background:#070707;text-align:center;border-top:1px solid
      <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="reviewWebsite">Website</label><input id="reviewWebsite" name="website" tabindex="-1" autocomplete="off"></div>
      <button type="submit">SUBMIT REVIEW</button><p id="reviewStatus" class="review-status" role="status"></p>
     </form>
+    <p class="review-note" style="margin-top:14px;font-size:0.8rem;">Reviews are screened for authenticity, spam, and inappropriate content, regardless of rating.</p>
    </div>
   </div>
  </div>
@@ -218,7 +219,7 @@ async function loadReviews(){
  try{
   const res=await fetch('/api/reviews',{cache:'no-store'});if(!res.ok)throw new Error('Reviews unavailable');
   const data=await res.json();list.replaceChildren();
-  if(!data.reviews?.length){const p=document.createElement('p');p.className='review-note';p.textContent='Customer reviews will appear here once approved.';list.append(p);return;}
+  if(!data.reviews?.length){const p=document.createElement('p');p.className='review-note';p.textContent='Be among the first to share your Strategic Drive experience.';list.append(p);return;}
   for(const r of data.reviews){
    const card=document.createElement('article');card.className='review-card';
    const stars=document.createElement('div');stars.className='review-stars';stars.setAttribute('aria-label',r.rating+' out of 5 stars');stars.textContent='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
@@ -235,7 +236,7 @@ document.getElementById('reviewForm').addEventListener('submit',async function(e
   const payload=Object.fromEntries(new FormData(this).entries());
   const res=await fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   const result=await res.json().catch(()=>({}));if(!res.ok)throw new Error(result.error||'Unable to submit review.');
-  this.reset();status.textContent='Thank you! Your review was received and is awaiting approval.';
+  this.reset();status.textContent='Thank you for sharing your experience with Strategic Drive. Your feedback has been received.';
  }catch(err){status.textContent=err.message||'Unable to submit review.';}finally{btn.disabled=false;}
 });
 loadReviews();
