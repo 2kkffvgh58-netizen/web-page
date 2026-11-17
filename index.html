@@ -37,6 +37,7 @@ footer{padding:45px 8%;background:#070707;text-align:center;border-top:1px solid
 @media(max-width:800px){.review-grid{grid-template-columns:1fr}.review-panel{padding:20px}}
 
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 <nav>
@@ -123,6 +124,7 @@ footer{padding:45px 8%;background:#070707;text-align:center;border-top:1px solid
      <div><label for="reviewRating">Your rating</label><select id="reviewRating" name="rating" required><option value="">Select a rating</option><option value="5">★★★★★ — Excellent</option><option value="4">★★★★ — Very good</option><option value="3">★★★ — Good</option><option value="2">★★ — Fair</option><option value="1">★ — Poor</option></select></div>
      <div><label for="reviewText">Your review</label><textarea id="reviewText" name="body" minlength="15" maxlength="1500" required placeholder="Tell us about your experience…"></textarea></div>
      <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="reviewWebsite">Website</label><input id="reviewWebsite" name="website" tabindex="-1" autocomplete="off"></div>
+     <div class="cf-turnstile" data-sitekey="0x4AAAAAAGFkiMZpx-WjG0Dc" data-action="submit-review" data-theme="dark"></div>
      <button type="submit">SUBMIT REVIEW</button><p id="reviewStatus" class="review-status" role="status"></p>
     </form>
     <p class="review-note" style="margin-top:14px;font-size:0.8rem;">Reviews are screened for authenticity, spam, and inappropriate content, regardless of rating.</p>
@@ -234,10 +236,13 @@ document.getElementById('reviewForm').addEventListener('submit',async function(e
  const btn=this.querySelector('button[type="submit"]');const status=document.getElementById('reviewStatus');btn.disabled=true;status.textContent='Submitting your review…';
  try{
   const payload=Object.fromEntries(new FormData(this).entries());
+  payload.turnstileToken=payload['cf-turnstile-response']||'';
+  delete payload['cf-turnstile-response'];
+  if(!payload.turnstileToken)throw new Error('Please complete the spam verification before submitting.');
   const res=await fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   const result=await res.json().catch(()=>({}));if(!res.ok)throw new Error(result.error||'Unable to submit review.');
   this.reset();status.textContent='Thank you for sharing your experience with Strategic Drive. Your feedback has been received.';
- }catch(err){status.textContent=err.message||'Unable to submit review.';}finally{btn.disabled=false;}
+ }catch(err){status.textContent=err.message||'Unable to submit review.';}finally{if(window.turnstile)window.turnstile.reset();btn.disabled=false;}
 });
 loadReviews();
 

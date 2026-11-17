@@ -13,11 +13,20 @@ export async function onRequestPost({request,env}){
  if(clean(data.website,200))return reply({message:'Review received.'},202);
  const name=clean(data.name,80),body=clean(data.body,1500),rating=Number(data.rating);
  if(name.length<2||body.length<15||body.length>1500||!Number.isInteger(rating)||rating<1||rating>5)return reply({error:'Please provide a name, a rating from 1–5, and a review of at least 15 characters.'},400);
- if(env.TURNSTILE_SECRET){
-  const token=clean(data.turnstileToken,4096);if(!token)return reply({error:'Please complete the spam verification.'},400);
-  const fd=new FormData();fd.append('secret',env.TURNSTILE_SECRET);fd.append('response',token);
-  try{const r=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:fd});const v=await r.json();if(!v.success)return reply({error:'Spam verification failed.'},403);}catch{return reply({error:'Spam verification unavailable.'},503);}
- }
+ if(!env.TURNSTILE_SECRET_KEY)return reply({error:'Review verification is temporarily unavailable.'},503);
+ const token=clean(data.turnstileToken,4096);
+ if(!token)return reply({error:'Please complete the spam verification.'},400);
+ const fd=new FormData();
+ fd.append('secret',env.TURNSTILE_SECRET_KEY);
+ fd.append('response',token);
+ try{
+  const r=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:fd});
+  if(!r.ok)return reply({error:'Spam verification unavailable.'},503);
+  const v=await r.json();
+  if(!v.success||v.action!=='submit-review'||v.hostname!==new URL(request.url).hostname)
+   return reply({error:'Spam verification failed. Please try again.'},403);
+ }catch{return reply({error:'Spam verification unavailable.'},503);}
+
  try{await env.REVIEWS_DB.prepare("INSERT INTO reviews (id,name,rating,body,status) VALUES (?,?,?,?, 'pending')").bind(crypto.randomUUID(),name,rating,body).run();return reply({message:'Review received and awaiting approval.'},202);}
  catch{return reply({error:'Unable to save review right now.'},503);}
 }
