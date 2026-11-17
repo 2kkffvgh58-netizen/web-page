@@ -23,6 +23,19 @@ footer{padding:45px 8%;background:#070707;text-align:center;border-top:1px solid
 .modal{position:fixed;inset:0;background:#000d;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}.modal.active{display:flex}.modal-content{background:#151515;border:1px solid var(--gold);width:100%;max-width:570px;padding:40px;position:relative;margin:auto}.close-modal{position:absolute;top:15px;right:20px;color:var(--gold);background:none;border:0;font-size:28px;cursor:pointer}.modal-content h2{font-family:"Cormorant Garamond",serif;font-size:40px;font-weight:400;margin-bottom:5px}.modal-content>p{font-size:11px;color:var(--gray);margin-bottom:25px}.booking-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-group{display:flex;flex-direction:column;gap:7px}.form-group.full{grid-column:1/-1}.form-group label{color:var(--gold-light);font-size:9px;letter-spacing:1px;text-transform:uppercase}.form-group input,.form-group select,.form-group textarea{width:100%;background:#222;border:1px solid #3c3c3c;color:white;padding:13px;outline:none;font-size:11px;border-radius:0}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}.form-group textarea{resize:vertical;min-height:85px}.booking-form .btn{grid-column:1/-1;width:100%;margin-top:8px}.form-message{display:none;grid-column:1/-1;padding:15px;background:#25251c;color:var(--gold-light);font-size:12px}
 @media(max-width:900px){.ev-section,.about{grid-template-columns:1fr;gap:40px}.ev-image{min-height:350px}.service-grid{grid-template-columns:1fr 1fr}.about-image{min-height:350px}}
 @media(max-width:650px){nav{height:75px}.menu-toggle{display:block}.nav-links{display:none;position:absolute;top:75px;left:0;width:100%;padding:25px 8%;background:#111;flex-direction:column;align-items:flex-start;gap:22px}.nav-links.open{display:flex}.hero{min-height:680px}.hero-content{padding-top:120px}.hero-bottom{font-size:8px}.intro-strip{justify-content:center}.section{padding:75px 7%}.service-grid{grid-template-columns:1fr}.benefits{grid-template-columns:1fr 1fr}.booking-form{grid-template-columns:1fr}.form-group.full,.booking-form .btn,.form-message{grid-column:1}.modal-content{padding:32px 22px}.btn-outline{margin:12px 0 0}}
+
+/* Strategic Drive customer reviews enhancement */
+.review-section{background:linear-gradient(145deg,#111,#090909);border-top:1px solid #342a1c}
+.review-wrap{max-width:1100px;margin:auto}.review-intro{text-align:center;margin-bottom:38px}
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.review-panel{border:1px solid #715b37;background:#141414;padding:28px;border-radius:12px}
+.review-panel h3{font-family:"Cormorant Garamond",serif;color:#e5d0a3;font-size:31px;font-weight:500;margin-bottom:12px}
+.review-list{display:grid;gap:15px}.review-card{border-bottom:1px solid #3c3326;padding:12px 0}.review-card:last-child{border-bottom:0}
+.review-stars{color:#d9b56b;letter-spacing:3px}.review-card blockquote{margin:10px 0;color:#f7f5f0;white-space:pre-wrap;overflow-wrap:anywhere}.review-by{font-size:12px;color:#c6a76a}
+.review-form{display:grid;gap:12px}.review-form label{display:block;color:#e5d0a3;font-size:13px}.review-form input,.review-form select,.review-form textarea{width:100%;background:#090909;color:#f7f5f0;border:1px solid #79643f;border-radius:5px;padding:11px}
+.review-form textarea{min-height:110px}.review-form button{background:#c6a76a;color:#090909;padding:12px 20px;border:0;cursor:pointer;font-weight:700;letter-spacing:1px}.review-form button:disabled{opacity:.5;cursor:wait}
+.review-note,.review-status{font-size:13px;color:#c8b99d}.review-status{min-height:22px}
+@media(max-width:800px){.review-grid{grid-template-columns:1fr}.review-panel{padding:20px}}
+
 </style>
 </head>
 <body>
@@ -96,6 +109,25 @@ footer{padding:45px 8%;background:#070707;text-align:center;border-top:1px solid
     <p>Strategic Drive is more than transportation. It is a promise to approach every journey with care, integrity, and a standard of service shaped by three decades of global experience.</p>
     <div class="signature">Driven by Experience. Defined by Excellence.</div>
   </div>
+</section>
+
+
+<section class="section review-section" id="reviews">
+ <div class="review-wrap">
+  <div class="review-intro"><div class="eyebrow">Thoughtful Service. Lasting Impressions.</div><h2 class="section-title">YOUR EXPERIENCE MATTERS</h2><p>Read approved customer-submitted experiences and share your own journey with Strategic Drive.</p></div>
+  <div class="review-grid">
+   <div class="review-panel"><h3>Customer Experiences</h3><div id="reviewsList" class="review-list" aria-live="polite"><p class="review-note">Loading customer reviews…</p></div></div>
+   <div class="review-panel"><h3>Share Your Experience</h3><p class="review-note">All submissions are reviewed before appearing publicly.</p>
+    <form id="reviewForm" class="review-form">
+     <div><label for="reviewName">Your name</label><input id="reviewName" name="name" maxlength="80" required autocomplete="name"></div>
+     <div><label for="reviewRating">Your rating</label><select id="reviewRating" name="rating" required><option value="">Select a rating</option><option value="5">★★★★★ — Excellent</option><option value="4">★★★★ — Very good</option><option value="3">★★★ — Good</option><option value="2">★★ — Fair</option><option value="1">★ — Poor</option></select></div>
+     <div><label for="reviewText">Your review</label><textarea id="reviewText" name="body" minlength="15" maxlength="1500" required placeholder="Tell us about your experience…"></textarea></div>
+     <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="reviewWebsite">Website</label><input id="reviewWebsite" name="website" tabindex="-1" autocomplete="off"></div>
+     <button type="submit">SUBMIT REVIEW</button><p id="reviewStatus" class="review-status" role="status"></p>
+    </form>
+   </div>
+  </div>
+ </div>
 </section>
 
 <section class="cta"><div class="eyebrow">Your Journey Starts Here</div><h2>Luxury Is Not Just a Destination.<br>It's the Entire Journey.</h2><p>Experience a smarter, quieter, more sophisticated way to travel.</p><button class="btn" onclick="openBooking()">BOOK YOUR RIDE</button></section>
@@ -178,6 +210,36 @@ document.getElementById('bookingForm').addEventListener('submit', async function
 document.getElementById('year').textContent=new Date().getFullYear();
 const dateInput=document.getElementById('date');
 const now=new Date();dateInput.min=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().split('T')[0];
+
+
+// Reviews are rendered using textContent, never injected as HTML.
+async function loadReviews(){
+ const list=document.getElementById('reviewsList');
+ try{
+  const res=await fetch('/api/reviews',{cache:'no-store'});if(!res.ok)throw new Error('Reviews unavailable');
+  const data=await res.json();list.replaceChildren();
+  if(!data.reviews?.length){const p=document.createElement('p');p.className='review-note';p.textContent='Customer reviews will appear here once approved.';list.append(p);return;}
+  for(const r of data.reviews){
+   const card=document.createElement('article');card.className='review-card';
+   const stars=document.createElement('div');stars.className='review-stars';stars.setAttribute('aria-label',r.rating+' out of 5 stars');stars.textContent='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+   const quote=document.createElement('blockquote');quote.textContent=r.body;
+   const by=document.createElement('p');by.className='review-by';by.textContent='— '+r.name;
+   card.append(stars,quote,by);list.append(card);
+  }
+ }catch(e){list.textContent='Reviews are temporarily unavailable. Please check back soon.';}
+}
+document.getElementById('reviewForm').addEventListener('submit',async function(e){
+ e.preventDefault();if(!this.reportValidity())return;
+ const btn=this.querySelector('button[type="submit"]');const status=document.getElementById('reviewStatus');btn.disabled=true;status.textContent='Submitting your review…';
+ try{
+  const payload=Object.fromEntries(new FormData(this).entries());
+  const res=await fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const result=await res.json().catch(()=>({}));if(!res.ok)throw new Error(result.error||'Unable to submit review.');
+  this.reset();status.textContent='Thank you! Your review was received and is awaiting approval.';
+ }catch(err){status.textContent=err.message||'Unable to submit review.';}finally{btn.disabled=false;}
+});
+loadReviews();
+
 </script>
 </body>
 </html>
